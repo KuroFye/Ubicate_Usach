@@ -34,8 +34,8 @@ public class HttpGet extends AsyncTask<String, Void, String> {
         try {
             URL url = new URL(urls[0]);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setReadTimeout(10000);
-            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(100000);
+            connection.setConnectTimeout(100000);
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
             connection.connect();

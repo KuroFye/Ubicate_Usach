@@ -12,8 +12,9 @@ import android.widget.TextView;
 /**
  * Created by Vanaheim on 5/19/2016.
  */
-public class ComentarLugar extends Fragment{
+public class ComentarLugar extends android.support.v4.app.Fragment{
     private BroadcastReceiver br = null;
+    private View contentView = null;
 
     public ComentarLugar(){
 
@@ -30,7 +31,9 @@ public class ComentarLugar extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.valorar_lugar, container, false);
+        View v = inflater.inflate(R.layout.comentar_lugar, container, false);
+        contentView = v;
+        return v;
     }
 
     /**
@@ -39,7 +42,8 @@ public class ComentarLugar extends Fragment{
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-        ((TextView) getView().findViewById(R.id.text_datos_lugar)).setText(bundle.getString("item"));
+        TextView tv = (TextView)contentView.findViewById(R.id.text_datos_lugar);
+        tv.append(bundle.getString("item"));
         super.onViewStateRestored(savedInstanceState);
     }// onViewStateRestored(Bundle savedInstanceState)
 

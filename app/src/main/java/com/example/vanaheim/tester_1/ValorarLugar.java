@@ -67,13 +67,14 @@ public class ValorarLugar extends ListFragment {
         String item = "Nombre: "+actorsList.get(position).getNombrePub()+"\n";
         item = item + "Codigo: " + actorsList.get(position).getCodigoPub()+ "\n";
         item = item + "Descripcion: " + actorsList.get(position).getDescripcionPub()+"\n";
-        Fragment valorarLugar = new ValorarLugar();
+        Fragment comentarLugar = new ComentarLugar();
         Bundle arguments = new Bundle();
         arguments.putString("item", item);
         int id_publicacion = actorsList.get(position).getPubId();
         arguments.putInt("id", id_publicacion);
+        comentarLugar.setArguments(arguments);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, valorarLugar);
+        transaction.replace(R.id.fragment_container, comentarLugar);
         transaction.addToBackStack(null);
         transaction.commit();
     }// onListItemClick(ListView l, View v, int position, long id)
