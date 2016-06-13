@@ -201,20 +201,24 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
 
         Log.e("handler", rawResult.getText()); // Prints scan results
         Log.e("handler", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode)
-        if (rawResult.getText().toString().equals("google")){
+        if (rawResult.getText().toString().equals("Estatua EAO")){
             setContentView(R.layout.activity_main);
-            Fragment CrearUsuario = new CrearUsuario();
+            Fragment MostrarLugar = new MostrarLugar();
+            String item = "http://192.168.1.35:8080/backend-java/publicaciones/3";
+            Bundle arguments = new Bundle();
+            arguments.putString("item", item);
+            MostrarLugar.setArguments(arguments);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, CrearUsuario);
+            transaction.replace(R.id.fragment_container, MostrarLugar);
             transaction.addToBackStack(null);
             transaction.commit();
         }
         // show the scanner result into dialog box.
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scan Result");
-        builder.setMessage(rawResult.getText());
-        AlertDialog alert1 = builder.create();
-        alert1.show();
+        //AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle("Scan Result");
+        //builder.setMessage(rawResult.getText());
+        //AlertDialog alert1 = builder.create();
+        //alert1.show();
 
        // If you would like to resume scanning, call this method below:
         // mScannerView.resumeCameraPreview(this);
