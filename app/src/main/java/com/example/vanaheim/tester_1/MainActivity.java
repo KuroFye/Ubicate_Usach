@@ -168,10 +168,11 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
      * conecta con la DB para crear un usuario
      */
     public void onClickBotonCrearUsuario(View v){
+
         EditText user = (EditText) findViewById(R.id.espacio_crear_nombre);
         EditText pass = (EditText) findViewById(R.id.espacio_crear_password);
         EditText mail = (EditText) findViewById(R.id.espacio_crear_email);
-        String URL_GET = "http://192.168.1.35:8080/backend-java/usuarios";
+        String URL_GET = "http://158.170.62.221:8080/sakila-backend-master/usuarios";
         Toast.makeText(this,user.getText().toString() , Toast.LENGTH_LONG).show();
         Usuario actor = new Usuario(user.getText().toString(), pass.getText().toString(), mail.getText().toString());
         String actorS = "{\"nombreUser\":\"" + actor.getNombreUser() + "\",\"mailUser\":\"" + actor.getMailUser() + "\",\"contraseñaUser\":\"" + actor.getContrasenaUser() +"\"}";
@@ -192,6 +193,35 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         }
     }
 
+
+    /*  Metodo que permite insertar un comentario en la base de datos
+
+*/
+    public void crearComentario(View v){
+        EditText comentario = (EditText) findViewById(R.id.edit_text_comentario);
+        String URL_GET = "http://158.170.62.221:8080/sakila-backend-master/valoraciones";
+        Toast.makeText(this, "Funciona el botón", Toast.LENGTH_SHORT).show();
+        String consulta ="{\"userId\":\"1\",\"publicacionId\":\"1\",\"valoracion\":\"3\",\"texto\":\"" +comentario+"\"}";
+        try {
+            SystemUtilities su = new SystemUtilities(this.getApplicationContext());
+            if (su.isNetworkAvailable()) {
+                try {
+                    //AsyncTask resp = new HttpPost(this.getApplicationContext()).execute(consulta,URL_GET);
+                    Toast.makeText(this, "Comentario agregado correctamente", Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (Exception e) {
+        }
+    }
+
+
+
+
+
     /*
     *                               Metodo para leer codigo QR
      */
@@ -204,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         if (rawResult.getText().toString().equals("Estatua EAO")){
             setContentView(R.layout.activity_main);
             Fragment MostrarLugar = new MostrarLugar();
-            String item = "http://192.168.1.35:8080/backend-java/publicaciones/3";
+            String item = "http://158.170.62.221:8080/sakila-backend-master/publicaciones/3";
             Bundle arguments = new Bundle();
             arguments.putString("item", item);
             MostrarLugar.setArguments(arguments);

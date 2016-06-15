@@ -31,7 +31,7 @@ import utilidades.SystemUtilities;
 public class ValorarLugar extends ListFragment {
 
     private BroadcastReceiver br = null;
-    private final String URL_GET = "http://192.168.1.35:8080/backend-java/publicaciones/";
+    private final String URL_GET = "http://158.170.62.221:8080/sakila-backend-master/publicaciones/";
     private ArrayList<Lugar> actorsList;
 
     /**

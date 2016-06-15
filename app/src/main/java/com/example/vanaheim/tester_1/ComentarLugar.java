@@ -58,4 +58,6 @@ public class ComentarLugar extends android.support.v4.app.Fragment{
         }
         super.onPause();
     }// onPause()
+
+
 }

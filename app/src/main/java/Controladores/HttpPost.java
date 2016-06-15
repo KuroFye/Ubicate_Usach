@@ -59,7 +59,7 @@ public class HttpPost extends AsyncTask<String, Void, String> {
             osw.flush();
             osw.close();
             int statusCode = httpCon.getResponseCode();
-            if (statusCode==204) return "Se agregó correctamente el usuario";
+            if (statusCode==204) return "La inserción fue correcta";
             else return "Hay un poblema con la consulta";
 
         } catch (MalformedURLException e) {

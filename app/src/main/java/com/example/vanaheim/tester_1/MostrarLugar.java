@@ -23,7 +23,7 @@ import modelos.Lugar;
 import utilidades.JsonHandler;
 import utilidades.SystemUtilities;
 
-public class MostrarLugar extends ListFragment {
+public class MostrarLugar extends  android.support.v4.app.Fragment {
 
     private BroadcastReceiver br = null;
     private ArrayList<Lugar> actorsList;
@@ -72,11 +72,11 @@ public class MostrarLugar extends ListFragment {
             @Override
             public void onReceive(Context context, Intent intent) {
                 JsonHandler jh = new JsonHandler();
-                actorsList = jh.getPublicaciones(intent.getStringExtra("data"));
-                String item = "Nombre: "+actorsList.get(1).getNombrePub()+"\n";
-                item = item + "Descripcion: " + actorsList.get(1).getDescripcionPub()+"\n";
+                actorsList = jh.getPublicacionLugar(intent.getStringExtra("data"));
+                String item = "Nombre: "+actorsList.get(0).getNombrePub()+"\n";
+                item = item + "Descripcion: " + actorsList.get(0).getDescripcionPub()+"\n";
                 TextView tv = (TextView)contentView.findViewById(R.id.text_datos_qr);
-                tv.append(item);
+                tv.setText(item);
             }
         };
         getActivity().registerReceiver(br, intentFilter);
