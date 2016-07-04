@@ -8,8 +8,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import modelos.Recomendacion;
 import modelos.Usuario;
 import modelos.Lugar;
+import modelos.Valoracion;
 
 /**
  * Created by bpastene on 20-05-16.
@@ -109,4 +111,88 @@ public class JsonHandler{
         //crea el objeto y lo agrega al arraylist
         result.add(new Lugar(codigoPub, descripcionPub, nombrePub, tipoPub, valoracionPub, latitud, longitud, pubId)); //lo devuelve
          return result; } catch (JSONException e) { Log.e("ERROR", this.getClass().toString() + " " + e.toString()); } return null; }// getActors(String actors
+
+    public ArrayList getValoraciones(String valoraciones, int idUser, int valoracionPedida) {
+        try {
+            // se pasa el string gigante a un objeto JSON
+            JSONArray ja = new JSONArray(valoraciones);
+            // se crea el arraylist que se va a devolver al final, parte vacio
+            ArrayList<Valoracion> result = new ArrayList<Valoracion>();
+            //se setean las variables auxiliares que se van a ocupar para crear los objetos Lugar
+            String texto;
+            int rating, idvaloracion, idUsuario, idPublicacion;
+            //el for va a recorrer todos los lugares del JSON, osea, todas las lineas devueltas por la consulta
+            for (int i = 0; i < ja.length(); i++){
+                //obtiene la linea (la fila en la DB)
+                JSONObject row = ja.getJSONObject(i);
+                //busca el valor asociado a nombrePub y lo transforma a string
+                idUsuario = row.getInt("idUsuario");
+                rating = row.getInt("rating");
+                if (idUsuario == idUser && rating>=valoracionPedida){
+                    texto = row.getString("texto");
+                    //lo mismo, pero lo transforma a int
+                    idPublicacion = row.getInt("idPublicacion");
+                    idvaloracion = row.getInt("idvaloracion");
+                    //crea el objeto y lo agrega al arraylist
+                    result.add(new Valoracion(rating, idvaloracion, idUsuario, texto, idPublicacion));
+                }
+            }
+            //lo devuelve
+            return result;
+        } catch (JSONException e) {
+            Log.e("ERROR", this.getClass().toString() + " " + e.toString());
+        }
+        return null;
+    }// getValoraciones(String valoraciones)
+
+    public ArrayList getTagsSugeridos(String tags) {
+        try {
+            // se pasa el string gigante a un objeto JSON
+            JSONArray ja = new JSONArray(tags);
+            // se crea el arraylist que se va a devolver al final, parte vacio
+            ArrayList<Recomendacion> result = new ArrayList<Recomendacion>();
+            //se setean las variables auxiliares que se van a ocupar para crear los objetos Lugar
+            int cantidad, pubId, sumaPub, valoracionPub;
+            String nombrePub;
+            //el for va a recorrer todos los lugares del JSON, osea, todas las lineas devueltas por la consulta
+            for (int i = 0; i < ja.length(); i++){
+                //obtiene la linea (la fila en la DB)
+                JSONObject row = ja.getJSONObject(i);
+                //busca el valor asociado a nombrePub y lo transforma a string
+                cantidad = row.getInt("cantidad");
+                nombrePub = row.getString("nombrePub");
+                pubId = row.getInt("pubId");
+                sumaPub = row.getInt("sumaPub");
+                valoracionPub = row.getInt("valoracionPub");
+                //crea el objeto y lo agrega al arraylist
+                result.add(new Recomendacion(cantidad, nombrePub, pubId, sumaPub, valoracionPub));
+            }
+            //lo devuelve
+            return result;
+        } catch (JSONException e) {
+            Log.e("ERROR", this.getClass().toString() + " " + e.toString());
+        }
+        return null;
+    }// getTagsSugeridos(String tags)
+
+    public ArrayList getTagsSugeridos(int datos_prueba) {
+        // se crea el arraylist que se va a devolver al final, parte vacio
+        ArrayList<Recomendacion> result = new ArrayList<Recomendacion>();
+        //se setean las variables auxiliares que se van a ocupar para crear los objetos Lugar
+        int cantidad, pubId, sumaPub, valoracionPub;
+        String nombrePub;
+        //el for va a recorrer todos los lugares del JSON, osea, todas las lineas devueltas por la consulta
+        for (int i = 0; i < datos_prueba; i++){
+            cantidad = i;
+            nombrePub = "Asdf"+i;
+            pubId = i+1;
+            sumaPub = i+2;
+            valoracionPub = i+3;
+            //crea el objeto y lo agrega al arraylist
+            result.add(new Recomendacion(cantidad, nombrePub, pubId, sumaPub, valoracionPub));
+        }
+        //lo devuelve
+        return result;
+    }// getTagsSugeridos(int datos_prueba)
+
 }

@@ -1,6 +1,7 @@
 package com.example.vanaheim.tester_1;
 
 import android.app.AlertDialog;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
@@ -25,6 +27,7 @@ import com.example.vanaheim.tester_1.ValorarLugar;
 
 public class MainActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
+    private int ID_USER = 1;
 
     FragmentTransaction transaction;
 
@@ -34,10 +37,22 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new MenuPrincipal());
-        transaction.commit();
+        setContentView(R.layout.splash_screen);
+        //display the logo during 5 seconds,
+        new CountDownTimer(5000,1000){
+            @Override
+            public void onTick(long millisUntilFinished){}
+
+            @Override
+            public void onFinish(){
+                //set the new Content of your activity
+                setContentView(R.layout.activity_main);
+                transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, new MenuPrincipal());
+                transaction.commit();
+            }
+        }.start();
+
     }
 
     /**
@@ -55,10 +70,10 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
      */
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
-        } else {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }// onBackPressed()
 
@@ -101,10 +116,26 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                     transaction.commit();
                 }
                 break;
+            case R.id.menu_valorar_tag:
+                if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, new ValorarTag(), "isActiveNewItem");
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                break;
             case R.id.menu_main_activity_qr:
                 if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
                     transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, new EscanearCodigoQR(), "isActiveNewItem");
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                break;
+            case R.id.menu_ver_registro_actividad:
+                if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, new VerRegistroActividad(), "isActiveNewItem");
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }
@@ -156,6 +187,24 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         transaction.commit();
     }
 
+    public void onClickVerTags(View v){
+        /*TextView tv = (TextView)findViewById(R.id.text_ver_lugares);
+        tv.setText("Swag");*/
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new VerTagsSugeridos());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void onClickVerRegistroActividad(View v){
+        /*TextView tv = (TextView)findViewById(R.id.text_ver_lugares);
+        tv.setText("Swag");*/
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new VerRegistroActividad());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     public void onClickVerMapa(View v){
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
@@ -193,6 +242,32 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         }
     }
 
+    /**
+     * conecta con la DB para enviar la valoracion de un tag
+     */
+    public void enviarValoracionTag(View v){
+
+        RatingBar rating = (RatingBar) findViewById(R.id.ratingBar);
+        int valor_rating = (int) rating.getRating();
+        String URL_POST = "http://158.170.62.221:8080/sakila-backend-master/valoracionestag";
+        ValorarTag fragment = (ValorarTag) getSupportFragmentManager().findFragmentById(R.id.menu_valorar_tag);
+        int id_tag = fragment.getIdTag();
+        String actorS = "{\"publicacionId\":\"" + id_tag + "\",\"userId\":\"" + ID_USER + "\",\"valoracion\":\"" + valor_rating +"\"}";
+        try {
+            SystemUtilities su = new SystemUtilities(this.getApplicationContext());
+            if (su.isNetworkAvailable()) {
+                try {
+                    AsyncTask resp = new HttpPost(this.getApplicationContext()).execute(actorS,URL_POST);
+                    Toast.makeText(this, "se valoro el tag "+id_tag + " con un "+ valor_rating+ "", Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (Exception e) {
+        }
+    }
 
     /*  Metodo que permite insertar un comentario en la base de datos
 

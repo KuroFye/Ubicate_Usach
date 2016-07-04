@@ -16,6 +16,15 @@
         android:id="@+id/menu_main_valorar"
         android:title="valorar lugar" />
     <item
+        android:id="@+id/menu_ver_registro_actividad"
+        android:title="Ver actividad" />
+    <item
+        android:id="@+id/menu_valorar_tag"
+        android:title="Valorar Tag" />
+    <item
+        android:id="@+id/menu_sugerir_tag"
+        android:title="Sugerir Tag" />
+    <item
         android:id="@+id/menu_main_activity_exit"
         android:title="Salir"/>
 </menu>

@@ -1,21 +1,27 @@
 package com.example.vanaheim.tester_1;
 
-import android.support.v4.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
- * Created by Vanaheim on 5/19/2016.
+ * Created by OscarDesailles on 7/3/2016.
  */
-public class CrearUsuario extends android.support.v4.app.Fragment{
-    private BroadcastReceiver br = null;
+public class ValorarTag extends android.support.v4.app.Fragment{
 
-    public CrearUsuario(){
+    private BroadcastReceiver br = null;
+    private View contentView = null;
+    private int id_tag;
+
+    public int getIdTag(){
+        return this.id_tag;
+    }
+
+    public ValorarTag(){
 
     }
 
@@ -30,13 +36,23 @@ public class CrearUsuario extends android.support.v4.app.Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.crear_usuario, container, false);
+        View v = inflater.inflate(R.layout.valorar_tag, container, false);
+        contentView = v;
+        return v;
     }
 
+    /**
+     * Método que se llama una vez que se ha restaurado el estado del fragmento
+     */
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        TextView tv = (TextView)contentView.findViewById(R.id.text_datos_lugar);
+        tv.append(bundle.getString("item"));
+        id_tag = bundle.getInt("id_tag");
         super.onViewStateRestored(savedInstanceState);
-    }
+    }// onViewStateRestored(Bundle savedInstanceState)
+
 
     /**
      * Método que se ejecuta luego que el fragmento se detiene
@@ -48,5 +64,7 @@ public class CrearUsuario extends android.support.v4.app.Fragment{
         }
         super.onPause();
     }// onPause()
+
+
 
 }
