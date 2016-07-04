@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     private ZXingScannerView mScannerView;
     private int ID_USER = 1;
 
+
     FragmentTransaction transaction;
 
     /**
@@ -124,6 +125,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                     transaction.commit();
                 }
                 break;
+            case R.id.menu_sugerir_tag:
+                if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, new SugerirTag(), "isActiveNewItem");
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                break;
             case R.id.menu_main_activity_qr:
                 if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
                     transaction = getSupportFragmentManager().beginTransaction();
@@ -135,8 +144,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             case R.id.menu_ver_registro_actividad:
                 if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
                     transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, new VerRegistroActividad(), "isActiveNewItem");
-                    transaction.addToBackStack(null);
+                    transaction.replace(R.id.fragment_container, new LeerLugaresDB(), "isActiveNewItem");
                     transaction.commit();
                 }
                 break;
@@ -187,6 +195,15 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         transaction.commit();
     }
 
+    public void onClickSugerirTag(View v){
+        /*TextView tv = (TextView)findViewById(R.id.text_ver_lugares);
+        tv.setText("Swag");*/
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new SugerirTag());
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     public void onClickVerTags(View v){
         /*TextView tv = (TextView)findViewById(R.id.text_ver_lugares);
         tv.setText("Swag");*/
@@ -200,8 +217,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         /*TextView tv = (TextView)findViewById(R.id.text_ver_lugares);
         tv.setText("Swag");*/
         transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, new VerRegistroActividad());
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.fragment_container, new LeerLugaresDB());
         transaction.commit();
     }
 
@@ -243,14 +259,40 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     }
 
     /**
-     * conecta con la DB para enviar la valoracion de un tag
+     * conecta con la DB para enviar una sugerencia de tag
+     */
+    public void enviarSugerirTag(View v){
+
+        EditText edit_sugerir_tag = (EditText) findViewById(R.id.edit_sugerir_tag2);
+        String nombre_tag = edit_sugerir_tag.getText().toString();
+        String URL_POST = "http://158.170.62.221:8080/sakila-backend-master/recomiendaalgo";
+        String actorS = "{\"nombrePub\":\"" + nombre_tag + "\",\"valoracionPub\":\"1\",\"sumavalPub\":\"1\",\"cantidadvalPub\":\"1\"}";
+        try {
+            SystemUtilities su = new SystemUtilities(this.getApplicationContext());
+            if (su.isNetworkAvailable()) {
+                try {
+                    AsyncTask resp = new HttpPost(this.getApplicationContext()).execute(actorS,URL_POST);
+                    Toast.makeText(this, "se sugirio el tag "+nombre_tag + "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Agregado correctamente a la DB", Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * conecta con la DB para enviar una valoracion de una sugerencia de tag
      */
     public void enviarValoracionTag(View v){
 
         RatingBar rating = (RatingBar) findViewById(R.id.ratingBar);
         int valor_rating = (int) rating.getRating();
         String URL_POST = "http://158.170.62.221:8080/sakila-backend-master/valoracionestag";
-        ValorarTag fragment = (ValorarTag) getSupportFragmentManager().findFragmentById(R.id.menu_valorar_tag);
+        ValorarTag fragment = (ValorarTag) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         int id_tag = fragment.getIdTag();
         String actorS = "{\"publicacionId\":\"" + id_tag + "\",\"userId\":\"" + ID_USER + "\",\"valoracion\":\"" + valor_rating +"\"}";
         try {
@@ -258,7 +300,9 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
             if (su.isNetworkAvailable()) {
                 try {
                     AsyncTask resp = new HttpPost(this.getApplicationContext()).execute(actorS,URL_POST);
+                    //Toast.makeText(this, " "+actorS+" ", Toast.LENGTH_SHORT).show();
                     Toast.makeText(this, "se valoro el tag "+id_tag + " con un "+ valor_rating+ "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Agregado correctamente a la DB", Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -275,13 +319,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
     public void crearComentario(View v){
         EditText comentario = (EditText) findViewById(R.id.edit_text_comentario);
         String URL_GET = "http://158.170.62.221:8080/sakila-backend-master/valoraciones";
-        Toast.makeText(this, "Funciona el botón", Toast.LENGTH_SHORT).show();
-        String consulta ="{\"userId\":\"1\",\"publicacionId\":\"1\",\"valoracion\":\"3\",\"texto\":\"" +comentario+"\"}";
+        RatingBar rating = (RatingBar) findViewById(R.id.ratingBar);
+        int valor_rating = (int) rating.getRating();
+        String consulta ="{\"userId\":\""+ID_USER+"\",\"publicacionId\":\"1\",\"valoracion\":\""+valor_rating+"\",\"texto\":\"" +comentario+"\"}";
         try {
             SystemUtilities su = new SystemUtilities(this.getApplicationContext());
             if (su.isNetworkAvailable()) {
                 try {
-                    //AsyncTask resp = new HttpPost(this.getApplicationContext()).execute(consulta,URL_GET);
+                    AsyncTask resp = new HttpPost(this.getApplicationContext()).execute(consulta,URL_GET);
                     Toast.makeText(this, "Comentario agregado correctamente", Toast.LENGTH_SHORT).show();
 
                 } catch (Exception e) {

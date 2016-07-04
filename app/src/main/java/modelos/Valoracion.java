@@ -7,7 +7,7 @@ public class Valoracion {
     private int rating;
     private int idvaloracion;
     private int idUsuario;
-    private String Texto;
+    private String Texto, nombrePublicacion;
     private int idPublicacion;
 
     public Valoracion(int rating, int idvaloracion, int idUsuario, String texto, int idPublicacion) {
@@ -16,10 +16,19 @@ public class Valoracion {
         this.idUsuario = idUsuario;
         Texto = texto;
         this.idPublicacion = idPublicacion;
+        this.nombrePublicacion = "no especificado";
     }
 
     public int getRating() {
         return rating;
+    }
+
+    public String getNombrePublicacion() {
+        return nombrePublicacion;
+    }
+
+    public void setNombrePublicacion(String nombrePublicacion) {
+        this.nombrePublicacion = nombrePublicacion;
     }
 
     public void setRating(int rating) {

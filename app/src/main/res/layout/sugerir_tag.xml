@@ -3,17 +3,18 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_sugerir_tag2"
+        android:hint="Tag a sugerir"
+        android:layout_gravity="center_horizontal" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sugerir un Tag"
+        android:text="Sugerir Tag"
         android:id="@+id/boton_sugerir_tag"
-        android:onClick="onClickSugerirTag"
-        android:layout_gravity="center_horizontal" />
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@android:id/list"
+        android:onClick="enviarSugerirTag"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

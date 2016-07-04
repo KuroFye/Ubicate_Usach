@@ -74,7 +74,7 @@ public class VerTagsSugeridos extends ListFragment{
         valorarTag.setArguments(arguments);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, valorarTag);
-        transaction.addToBackStack(null);
+        transaction.addToBackStack("verTagTag");
         transaction.commit();
     }// onListItemClick(ListView l, View v, int position, long id)
 
@@ -89,8 +89,8 @@ public class VerTagsSugeridos extends ListFragment{
             @Override
             public void onReceive(Context context, Intent intent) {
                 JsonHandler jh = new JsonHandler();
-                //actorsList = jh.getTagsSugeridos(intent.getStringExtra("data"));
-                actorsList = jh.getTagsSugeridos(6);
+                actorsList = jh.getTagsSugeridos(intent.getStringExtra("data"));
+                //actorsList = jh.getTagsSugeridos(6);
                 String[] actorsNames = new String[actorsList.size()];
                 for (int i=0; i<actorsList.size();i++ ){
                     actorsNames[i]= " Tag: " + actorsList.get(i).getNombrePub() + " Valoracion: " + actorsList.get(i).getValoracionPub();

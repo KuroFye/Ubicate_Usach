@@ -9,25 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by OscarDesailles on 7/3/2016.
+ * Created by OscarDesailles on 7/4/2016.
  */
-public class ValorarTag extends android.support.v4.app.Fragment{
-
+public class SugerirTag extends android.support.v4.app.Fragment{
     private BroadcastReceiver br = null;
     private View contentView = null;
 
-    private int id_tag;
-
-    public int getIdTag(){
-        return this.id_tag;
-    }
-
-    public void setIdTag(int idtag){
-        this.id_tag = idtag;
-        return;
-    }
-
-    public ValorarTag(){
+    public SugerirTag(){
 
     }
 
@@ -42,7 +30,7 @@ public class ValorarTag extends android.support.v4.app.Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.valorar_tag, container, false);
+        View v = inflater.inflate(R.layout.sugerir_tag, container, false);
         contentView = v;
         return v;
     }
@@ -52,10 +40,6 @@ public class ValorarTag extends android.support.v4.app.Fragment{
      */
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
-        TextView tv = (TextView)contentView.findViewById(R.id.text_datos_lugar);
-        tv.append(bundle.getString("item"));
-        id_tag = bundle.getInt("id_tag");
         super.onViewStateRestored(savedInstanceState);
     }// onViewStateRestored(Bundle savedInstanceState)
 
@@ -70,7 +54,5 @@ public class ValorarTag extends android.support.v4.app.Fragment{
         }
         super.onPause();
     }// onPause()
-
-
 
 }

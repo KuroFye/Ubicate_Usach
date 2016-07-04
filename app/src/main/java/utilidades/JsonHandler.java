@@ -89,6 +89,27 @@ public class JsonHandler{
                 return null;
             }// getActors(String actors)
 
+    public ArrayList getPublicaciones(int publicacion) {
+        // se pasa el string gigante a un objeto JSON
+        ArrayList<Lugar> result = new ArrayList<Lugar>();
+        String nombrePub, codigoPub, descripcionPub, latitud, longitud;
+        int tipoPub, valoracionPub, pubId;
+        //el for va a recorrer todos los lugares del JSON, osea, todas las lineas devueltas por la consulta
+        for (int i = 0; i < publicacion; i++){
+            nombrePub = "Lugar"+i;
+            tipoPub = i/2;
+            codigoPub = "asd"+i;
+            descripcionPub = "descripcion n"+i;
+            latitud = "0";
+            longitud = "0";
+            pubId = i;
+            valoracionPub = i+1;
+            //crea el objeto y lo agrega al arraylist
+            result.add(new Lugar(codigoPub, descripcionPub, nombrePub, tipoPub, valoracionPub, latitud, longitud, pubId));
+        }
+        //lo devuelve
+        return result;
+    }// getActors(String actors)
 
     public ArrayList getPublicacionLugar(String publicacion) { try
     { // se pasa el string gigante a un objeto JSON
@@ -112,6 +133,8 @@ public class JsonHandler{
         result.add(new Lugar(codigoPub, descripcionPub, nombrePub, tipoPub, valoracionPub, latitud, longitud, pubId)); //lo devuelve
          return result; } catch (JSONException e) { Log.e("ERROR", this.getClass().toString() + " " + e.toString()); } return null; }// getActors(String actors
 
+
+
     public ArrayList getValoraciones(String valoraciones, int idUser, int valoracionPedida) {
         try {
             // se pasa el string gigante a un objeto JSON
@@ -126,13 +149,13 @@ public class JsonHandler{
                 //obtiene la linea (la fila en la DB)
                 JSONObject row = ja.getJSONObject(i);
                 //busca el valor asociado a nombrePub y lo transforma a string
-                idUsuario = row.getInt("idUsuario");
-                rating = row.getInt("rating");
+                idUsuario = row.getInt("userId");
+                rating = row.getInt("valoracion");
                 if (idUsuario == idUser && rating>=valoracionPedida){
                     texto = row.getString("texto");
                     //lo mismo, pero lo transforma a int
-                    idPublicacion = row.getInt("idPublicacion");
-                    idvaloracion = row.getInt("idvaloracion");
+                    idPublicacion = row.getInt("publicacionId");
+                    idvaloracion = row.getInt("valoracionId");
                     //crea el objeto y lo agrega al arraylist
                     result.add(new Valoracion(rating, idvaloracion, idUsuario, texto, idPublicacion));
                 }
@@ -143,6 +166,27 @@ public class JsonHandler{
             Log.e("ERROR", this.getClass().toString() + " " + e.toString());
         }
         return null;
+    }// getValoraciones(String valoraciones)
+
+    public ArrayList getValoraciones(int valoraciones) {
+        ArrayList<Valoracion> result = new ArrayList<Valoracion>();
+        //se setean las variables auxiliares que se van a ocupar para crear los objetos Lugar
+        String texto;
+        int rating, idvaloracion, idUsuario, idPublicacion;
+        //el for va a recorrer todos los lugares del JSON, osea, todas las lineas devueltas por la consulta
+        for (int i = 0; i < valoraciones; i++){
+            //obtiene la linea (la fila en la DB)
+            idUsuario = i;
+            rating = i+1;
+            texto = "comentario n"+i;
+            //lo mismo, pero lo transforma a int
+            idPublicacion = i;
+            idvaloracion = i;
+            //crea el objeto y lo agrega al arraylist
+            result.add(new Valoracion(rating, idvaloracion, idUsuario, texto, idPublicacion));
+        }
+        //lo devuelve
+        return result;
     }// getValoraciones(String valoraciones)
 
     public ArrayList getTagsSugeridos(String tags) {
