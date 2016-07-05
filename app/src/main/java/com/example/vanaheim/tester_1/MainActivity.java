@@ -133,6 +133,14 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                     transaction.commit();
                 }
                 break;
+            case R.id.menu_ver_recomendaciones:
+                if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
+                    transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, new LeerLugaresDBRec(), "isActiveNewItem");
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                break;
             case R.id.menu_main_activity_qr:
                 if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
                     transaction = getSupportFragmentManager().beginTransaction();
@@ -145,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
                 if (!(getFragmentManager().findFragmentByTag("isActiveNewItem") != null && getFragmentManager().findFragmentByTag("isActiveNewItem").isVisible())) {
                     transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, new LeerLugaresDB(), "isActiveNewItem");
+                    transaction.addToBackStack(null);
                     transaction.commit();
                 }
                 break;
@@ -186,6 +195,17 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         transaction.commit();
     }
 
+    public void onClickVerRecomendaciones(View v){
+        /*TextView tv = (TextView)findViewById(R.id.text_ver_lugares);
+        tv.setText("Swag");*/
+        Fragment leerLugaresDBRec = new LeerLugaresDBRec();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, leerLugaresDBRec);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+    }
+
     public void onClickValorarLugares(View v){
         /*TextView tv = (TextView)findViewById(R.id.text_ver_lugares);
         tv.setText("Swag");*/
@@ -218,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements ZXingScannerView.
         tv.setText("Swag");*/
         transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new LeerLugaresDB());
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 

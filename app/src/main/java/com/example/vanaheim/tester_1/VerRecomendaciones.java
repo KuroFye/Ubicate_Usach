@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,18 +22,18 @@ import utilidades.JsonHandler;
 import utilidades.SystemUtilities;
 
 /**
- * Created by OscarDesailles on 7/3/2016.
+ * Created by OscarDesailles on 7/4/2016.
  */
-public class VerRegistroActividad extends ListFragment{
-
+public class VerRecomendaciones extends ListFragment {
     private BroadcastReceiver br = null;
     private ArrayList<Valoracion> actorsList;
     private ArrayList<Lugar> listaLugares;
+    private ArrayList<Lugar> listaRecomendaciones;
     private int ID_ACTIVE_USER=1;
     /**
      * Constructor. Obligatorio para Fragmentos!
      */
-    public VerRegistroActividad() {
+    public VerRecomendaciones() {
     }// ItemList()
 
     /**
@@ -47,7 +47,7 @@ public class VerRegistroActividad extends ListFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.ver_registro_actividad, container, false);
+        return inflater.inflate(R.layout.ver_recomendaciones, container, false);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class VerRegistroActividad extends ListFragment{
         Bundle bundle = getArguments();
         JsonHandler jh = new JsonHandler();
         listaLugares = jh.getPublicaciones(bundle.getString("request"));
-        //listaLugares = jh.getPublicaciones(10);
+        //listaLugares = jh.getPublicaciones(25);
         super.onViewStateRestored(savedInstanceState);
     }
 
@@ -67,11 +67,23 @@ public class VerRegistroActividad extends ListFragment{
             for (int j=0;j<listaLugares.size();j++){
                 if(actorsList.get(i).getIdPublicacion() == listaLugares.get(j).getPubId()){
                     actorsList.get(i).setNombrePublicacion(listaLugares.get(j).getNombrePub());
+                    actorsList.get(i).setCodigo_publicacion(listaLugares.get(j).getCodigoPub());
                 }
             }
         }
     }
 
+    public void ordenar_prioridades(){
+        for (int i=0; i<actorsList.size();i++) {
+            if(actorsList.get(i).getRating()>=4){
+                for (int j=0; j<listaLugares.size();j++){
+                    if(listaLugares.get(j).getCodigoPub().equals(actorsList.get(i).getCodigo_publicacion())){
+                        listaRecomendaciones.add(listaLugares.get(j));
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Método que se ejecuta luego que el fragmento es creado o restaurado
@@ -84,12 +96,15 @@ public class VerRegistroActividad extends ListFragment{
             @Override
             public void onReceive(Context context, Intent intent) {
                 JsonHandler jh = new JsonHandler();
-                actorsList = jh.getValoraciones(intent.getStringExtra("data"), ID_ACTIVE_USER, 0);
-                //actorsList = jh.getValoraciones(6,0);
+                listaRecomendaciones = new ArrayList<Lugar>();
+                actorsList = jh.getValoraciones(intent.getStringExtra("data"), ID_ACTIVE_USER, 3);
+                //actorsList = jh.getValoraciones(15, 3);
                 inner_join_on_pubid();
-                String[] registro_actividad = new String[actorsList.size()];
-                for (int i=0; i<actorsList.size();i++ ){
-                    registro_actividad[i]= " Valoraste la publicacion " + actorsList.get(i).getNombrePublicacion() + " con un " + actorsList.get(i).getRating() + " y comentaste " + actorsList.get(i).getTexto() + " en "+actorsList.get(i).getFecha();
+                ordenar_prioridades();
+                String[] registro_actividad = new String[listaRecomendaciones.size()];
+                registro_actividad[0]="Te recomendamos las siguientes publicaciones!";
+                for (int i=1; i<listaRecomendaciones.size();i++ ){
+                    registro_actividad[i]= "Nombre: " + listaRecomendaciones.get(i).getNombrePub() +" Valoracion: "+listaRecomendaciones.get(i).getValoracionPub();
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity()
                         , android.R.layout.simple_list_item_1, registro_actividad);

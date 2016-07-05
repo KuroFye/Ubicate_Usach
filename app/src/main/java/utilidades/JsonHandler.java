@@ -142,7 +142,7 @@ public class JsonHandler{
             // se crea el arraylist que se va a devolver al final, parte vacio
             ArrayList<Valoracion> result = new ArrayList<Valoracion>();
             //se setean las variables auxiliares que se van a ocupar para crear los objetos Lugar
-            String texto;
+            String texto, hora;
             int rating, idvaloracion, idUsuario, idPublicacion;
             //el for va a recorrer todos los lugares del JSON, osea, todas las lineas devueltas por la consulta
             for (int i = 0; i < ja.length(); i++){
@@ -156,8 +156,9 @@ public class JsonHandler{
                     //lo mismo, pero lo transforma a int
                     idPublicacion = row.getInt("publicacionId");
                     idvaloracion = row.getInt("valoracionId");
+                    hora = row.getString("fecha");
                     //crea el objeto y lo agrega al arraylist
-                    result.add(new Valoracion(rating, idvaloracion, idUsuario, texto, idPublicacion));
+                    result.add(new Valoracion(rating, idvaloracion, idUsuario, texto, idPublicacion, hora));
                 }
             }
             //lo devuelve
@@ -168,22 +169,28 @@ public class JsonHandler{
         return null;
     }// getValoraciones(String valoraciones)
 
-    public ArrayList getValoraciones(int valoraciones) {
+    public ArrayList getValoraciones(int valoraciones, int valoracion_minima) {
         ArrayList<Valoracion> result = new ArrayList<Valoracion>();
         //se setean las variables auxiliares que se van a ocupar para crear los objetos Lugar
-        String texto;
+        String texto, fecha;
         int rating, idvaloracion, idUsuario, idPublicacion;
         //el for va a recorrer todos los lugares del JSON, osea, todas las lineas devueltas por la consulta
         for (int i = 0; i < valoraciones; i++){
             //obtiene la linea (la fila en la DB)
             idUsuario = i;
             rating = i+1;
+            if(rating>5){
+                rating = 5;
+            }
             texto = "comentario n"+i;
             //lo mismo, pero lo transforma a int
             idPublicacion = i;
             idvaloracion = i;
+            fecha = i+"/"+(i+1)+"/2016T2"+i+":"+(i+10)+":47-03:"+(i+2);
             //crea el objeto y lo agrega al arraylist
-            result.add(new Valoracion(rating, idvaloracion, idUsuario, texto, idPublicacion));
+            if (rating>=valoracion_minima){
+                result.add(new Valoracion(rating, idvaloracion, idUsuario, texto, idPublicacion, fecha));
+            }
         }
         //lo devuelve
         return result;
